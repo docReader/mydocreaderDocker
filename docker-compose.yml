@@ -1,0 +1,40 @@
+version: '2'
+services: 
+    gatewayservice:
+      container_name: gatewayservice
+      build:
+          context: gatewayservice
+          dockerfile: Dockerfile
+      depends_on:
+          - "registryservice"          
+      image: gatewayservice:0.0.1
+      volumes:
+          - "/usr/local/dr/gatewayservice:/gatewayservice"
+      ports:
+          - "0.0.0.0:9090:9090"
+          - "0.0.0.0:9091:9091"
+          
+    fileservice:
+      container_name: fileservice
+      build:
+          context: fileservice
+          dockerfile: Dockerfile
+      depends_on:
+          - "registryservice"
+          - "gatewayservice"
+      image: fileservice:0.0.1
+      volumes:
+          - "/usr/local/dr/fileservice:/fileservice"
+      ports:
+          - "0.0.0.0:9001:9001"
+    
+    registryservice:
+      container_name: registryservice
+      build:
+          context: registry
+          dockerfile: Dockerfile
+      image: registryservice:0.0.1
+      volumes:
+          - "/usr/local/dr/registryservice:/registryservice"
+      ports:
+          - "0.0.0.0:8761:8761"          
